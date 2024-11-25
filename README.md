@@ -70,8 +70,7 @@ The `Event::query()` method dynamically fetches event data from the database wit
 ### **Usage**
 ```php
 $args = [
-    '_team_id' => 1,       // Optional: Filter by team ID
-    '_venue_id' => 2,      // Optional: Filter by venue ID
+    '_sport_id' => 1,       // Optional: Filter by sport ID
     'date' => '2024-12-01' // Optional: Filter by event date
 ];
 
