@@ -34,11 +34,11 @@ class EventController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                '_team1_id' => htmlspecialchars($_POST['_team1_id']),
-                '_team2_id' => htmlspecialchars($_POST['_team2_id']),
-                '_venue_id' => htmlspecialchars($_POST['_venue_id']),
-                'event_date' => htmlspecialchars($_POST['event_date']),
-                'description' => htmlspecialchars($_POST['description']),
+                '_team1_id' => $_POST['_team1_id'],
+                '_team2_id' => $_POST['_team2_id'],
+                '_venue_id' => $_POST['_venue_id'],
+                'event_date' => $_POST['event_date'],
+                'description' => $_POST['description'],
             ];
 
             Event::create($data);

@@ -7,26 +7,27 @@ use PDO;
 
 class Event
 {
-    public static function create(array $data)
+    public static function create(array $data): void
     {
         self::validateRequiredFields($data, ['_team1_id', '_team2_id', '_venue_id', 'event_date']);
+
+        // TODO: Get the team1 and team 2 sport, if it is the same return its id. This will ensure sport id is valid.
+        // TODO: Check if it is not the same team, both teams exist.
 
         // Insert the event into the database
         $db = Database::connect();
         $stmt = $db->prepare("
-            INSERT INTO events (_team1_id, _team2_id, _venue_id, event_date, description)
-            VALUES (:team1_id, :team2_id, :venue_id, :event_date, :description)
+            INSERT INTO events (_team1_id, _team2_id, _venue_id, _sport_id, event_date, description)
+            VALUES (:team1_id, :team2_id, :venue_id, :sport_id, :event_date, :description)
         ");
         $stmt->execute([
             ':team1_id' => $data['_team1_id'],
             ':team2_id' => $data['_team2_id'],
             ':venue_id' => $data['_venue_id'],
+            ':sport_id' => $data['_sport_id'],
             ':event_date' => $data['event_date'],
             ':description' => $data['description'] ?? null,
         ]);
-
-        // TODO: Implement create() method.
-        //TODO: Check if it is not the same team, both teams exist, and both teams are the same sport.
     }
 
     public static function query(array $args = []): array
@@ -41,7 +42,8 @@ class Event
             t2.name AS team2, 
             v.name AS venue, 
             e.event_date, 
-            e.description 
+            e.description,
+            e._sport_id 
         FROM events AS e
         JOIN teams AS t1 ON e._team1_id = t1.id
         JOIN teams AS t2 ON e._team2_id = t2.id
@@ -51,15 +53,13 @@ class Event
 
         $params = [];
 
-        // Add filters dynamically based on input
-        if (!empty($args['_team_id'])) {
-            $query .= " AND (e._team1_id = :team_id OR e._team2_id = :team_id)";
-            $params[':team_id'] = $args['_team_id'];
+        // Filter by sport
+        if (!empty($args['_sport_id'])) {
+            $query .= " AND e._sport_id = :sport_id";
+            $params[':sport_id'] = $args['_sport_id'];
         }
-        if (!empty($args['_venue_id'])) {
-            $query .= " AND e._venue_id = :venue_id";
-            $params[':venue_id'] = $args['_venue_id'];
-        }
+
+        // Filter by date
         if (!empty($args['date'])) {
             $query .= " AND DATE(e.event_date) = :event_date";
             $params[':event_date'] = $args['date'];
@@ -75,29 +75,46 @@ class Event
         return $results;
     }
 
-    private static function isNotSameTeam(int $team1, int $team2)
+    /**
+     * We will need to get the sports to display them in the form
+     * @return array
+     */
+    public static function getSports(): array
     {
-        // TODO: Implement isNotSameTeam() method. We need to make sure both teams are not the same before creating an event. If they are throw an exception.
+        $db = Database::connect();
+        $stmt = $db->query("SELECT * FROM sports");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private static function isSameSport(int $team1, int $team2)
+    /**
+     * We will need to get the teams to display them in the form
+     * @return array
+     */
+    public static function getTeams(): array
+    {
+        $db = Database::connect();
+        $stmt = $db->query("SELECT * FROM teams");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * We will need to get the venues to display them in the form
+     * @return array
+     */
+    public static function getVenues(): array
+    {
+        $db = Database::connect();
+        $stmt = $db->query("SELECT * FROM venues");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private static function isSameTeam(int $team1, int $team2)
+    {
+    }
+
+    private static function getSport(int $team1, int $team2)
     {
         // TODO: Implement isSameSport() method. We need to make sure both teams are the same sport before creating an event. If not throw an exception.
-    }
-
-    private static function teamExists(int $team)
-    {
-        // TODO: Implement teamExists() method. We need to make sure the team exists before creating an event. If not throw an exception.
-    }
-
-    private static function sportExists(int $sport)
-    {
-        // TODO: Implement sportExists() method. We need to make sure the sport exists before creating an event. If not throw an exception.
-    }
-
-    private static function venueExists(int $venue)
-    {
-        // TODO: Implement venueExists() method. We need to make sure the venue exists before creating an event. If not throw an exception.
     }
 
     private static function validateRequiredFields(array $data, array $requiredFields): void
