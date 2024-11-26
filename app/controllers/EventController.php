@@ -15,19 +15,20 @@ class EventController
      */
     public function index(): void
     {
-        View::render('pages/index.php');
-    }
+        $args = [];
 
-    /**
-     * List all events and render them.
-     *
-     * @return void
-     */
-    public function archive(): void
-    {
-        /** @var array $events Array of events */
-        $events = Event::query();
-        View::render('pages/events.php', [ 'events' => $events ]);
+        // Check if _sport_id is set and validate it
+        if (isset($_GET['_sport_id']) && is_numeric($_GET['_sport_id'])) {
+            $args['_sport_id'] = (int)$_GET['_sport_id'];
+        }
+
+        // Check if date is set and validate it
+        if (isset($_GET['date']) && \DateTime::createFromFormat('Y-m-d', $_GET['date'])) {
+            $args['date'] = $_GET['date'];
+        }
+
+        $events = Event::query($args);
+        View::render('pages/index.php', [ 'events' => $events ]);
     }
 
     /**

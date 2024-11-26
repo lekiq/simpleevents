@@ -7,7 +7,6 @@ $router = new Router();
 
 // GET routes
 $router->get('/', [EventController::class, 'index']);
-$router->get('/events', [EventController::class, 'archive']);
 
 // API routes
 $router->get('/api/sports', [EventController::class, 'sports']);
