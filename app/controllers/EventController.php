@@ -43,8 +43,36 @@ class EventController
             ];
 
             Event::create($data);
-	        Utils::redirect('/events');
+            Utils::redirect('/events');
             exit;
         }
+    }
+
+    /**
+     * Get all sports and give the response in JSON format
+     */
+    public function sports(): void
+    {
+        $sports = Event::getSports();
+        Utils::jsonResponse($sports);
+    }
+
+    /**
+     * Get all teams for a given sport and give the response in JSON format
+     */
+    public function teams(): void
+    {
+        $sportId = $_GET['_sport_id'];
+        $teams = Event::getTeams($sportId);
+        Utils::jsonResponse($teams);
+    }
+
+    /**
+     * Get all venues and give the response in JSON format
+     */
+    public function venues(): void
+    {
+        $venues = Event::getVenues();
+        Utils::jsonResponse($venues);
     }
 }

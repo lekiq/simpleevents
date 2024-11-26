@@ -7,29 +7,11 @@ use PDO;
 
 class Event
 {
-    public static function create(array $data): void
-    {
-        self::validateRequiredFields($data, ['_team1_id', '_team2_id', '_venue_id', 'event_date']);
-
-        // TODO: Get the team1 and team 2 sport, if it is the same return its id. This will ensure sport id is valid.
-        // TODO: Check if it is not the same team, both teams exist.
-
-        // Insert the event into the database
-        $db = Database::connect();
-        $stmt = $db->prepare("
-            INSERT INTO events (_team1_id, _team2_id, _venue_id, _sport_id, event_date, description)
-            VALUES (:team1_id, :team2_id, :venue_id, :sport_id, :event_date, :description)
-        ");
-        $stmt->execute([
-            ':team1_id' => $data['_team1_id'],
-            ':team2_id' => $data['_team2_id'],
-            ':venue_id' => $data['_venue_id'],
-            ':sport_id' => $data['_sport_id'],
-            ':event_date' => $data['event_date'],
-            ':description' => $data['description'] ?? null,
-        ]);
-    }
-
+    /**
+     * Get all events
+     * @param array $args
+     * @return array
+     */
     public static function query(array $args = []): array
     {
         $db = Database::connect();
@@ -76,7 +58,43 @@ class Event
     }
 
     /**
-     * We will need to get the sports to display them in the form
+     * Create a new event
+     * @param array $data
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    public static function create(array $data): void
+    {
+        self::validateRequiredFields($data, ['_team1_id', '_team2_id', '_venue_id', 'event_date']);
+
+        // Ensure both teams exist
+        $team1 = self::getTeam($data['_team1_id']);
+        $team2 = self::getTeam($data['_team2_id']);
+
+        // Validate that teams are different
+        self::isDifferentTeams($team1['id'], $team2['id']);
+
+        // Ensure teams belong to the same sport
+        $sportId = self::getMatchSportId($team1['id'], $team2['id']);
+
+        // Insert the event into the database
+        $db = Database::connect();
+        $stmt = $db->prepare("
+            INSERT INTO events (_team1_id, _team2_id, _venue_id, _sport_id, event_date, description)
+            VALUES (:team1_id, :team2_id, :venue_id, :sport_id, :event_date, :description)
+        ");
+        $stmt->execute([
+            ':team1_id' => $data['_team1_id'],
+            ':team2_id' => $data['_team2_id'],
+            ':venue_id' => $data['_venue_id'],
+            ':sport_id' => $sportId,
+            ':event_date' => $data['event_date'],
+            ':description' => $data['description'] ?? null,
+        ]);
+    }
+
+    /**
+     * Get all sports
      * @return array
      */
     public static function getSports(): array
@@ -87,36 +105,89 @@ class Event
     }
 
     /**
-     * We will need to get the teams to display them in the form
+     * Get all teams
      * @return array
      */
-    public static function getTeams(): array
+    public static function getTeams(int $sportId): array
     {
         $db = Database::connect();
-        $stmt = $db->query("SELECT * FROM teams");
+        $stmt = $db->prepare("SELECT * FROM teams WHERE _sport_id = :sport_id");
+        $stmt->execute([':sport_id' => $sportId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * We will need to get the venues to display them in the form
+     * Get a specific team by ID
+     * @param int $teamId
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public static function getTeam(int $teamId): array
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT * FROM teams WHERE id = :id");
+        $stmt->execute([':id' => $teamId]);
+        $team = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$team) {
+            throw new InvalidArgumentException("Team with ID $teamId does not exist.");
+        }
+
+        return $team;
+    }
+
+    /**
+     * Get all venues
      * @return array
      */
     public static function getVenues(): array
     {
+		// TODO: Check if it is necessary to add the _sport_id to the venues table
         $db = Database::connect();
         $stmt = $db->query("SELECT * FROM venues");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private static function isSameTeam(int $team1, int $team2)
+    /**
+     * Ensure two teams are different
+     * @param int $team1
+     * @param int $team2
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    private static function isDifferentTeams(int $team1, int $team2): void
     {
+        if ($team1 === $team2) {
+            throw new InvalidArgumentException("The teams must be different.");
+        }
     }
 
-    private static function getSport(int $team1, int $team2)
+    /**
+     * Get the sport ID if both teams belong to the same sport
+     * @param int $team1
+     * @param int $team2
+     * @return int
+     * @throws InvalidArgumentException
+     */
+    private static function getMatchSportId(int $team1, int $team2): int
     {
-        // TODO: Implement isSameSport() method. We need to make sure both teams are the same sport before creating an event. If not throw an exception.
+        $team1Data = self::getTeam($team1);
+        $team2Data = self::getTeam($team2);
+
+        if ($team1Data['_sport_id'] !== $team2Data['_sport_id']) {
+            throw new InvalidArgumentException("The teams must belong to the same sport.");
+        }
+
+        return (int)$team1Data['_sport_id'];
     }
 
+    /**
+     * Validate required fields
+     * @param array $data
+     * @param array $requiredFields
+     * @return void
+     * @throws InvalidArgumentException
+     */
     private static function validateRequiredFields(array $data, array $requiredFields): void
     {
         foreach ($requiredFields as $field) {
