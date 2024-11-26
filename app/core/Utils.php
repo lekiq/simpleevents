@@ -4,6 +4,11 @@ namespace SimpleEvents\Core;
 
 class Utils
 {
+    /**
+     * Redirect to a given URL
+     * @param string $url
+     * @return void
+     */
     public static function redirect(string $url): void
     {
         header("Location: $url");
