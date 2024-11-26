@@ -142,7 +142,7 @@ class Event
      */
     public static function getVenues(): array
     {
-		// TODO: Check if it is necessary to add the _sport_id to the venues table
+        // TODO: Check if it is necessary to add the _sport_id to the venues table
         $db = Database::connect();
         $stmt = $db->query("SELECT * FROM venues");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
