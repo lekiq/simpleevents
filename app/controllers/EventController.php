@@ -65,7 +65,6 @@ class EventController
      */
     public function sports(): void
     {
-        /** @var array $sports Array of sports */
         $sports = Event::getSports();
         Utils::jsonResponse($sports);
     }
@@ -89,7 +88,6 @@ class EventController
             return;
         }
 
-        /** @var array $teams Array of teams for the given sport */
         $teams = Event::getTeams($sportId);
         Utils::jsonResponse($teams);
     }
@@ -101,7 +99,6 @@ class EventController
      */
     public function venues(): void
     {
-        /** @var array $venues Array of venues */
         $venues = Event::getVenues();
         Utils::jsonResponse($venues);
     }
