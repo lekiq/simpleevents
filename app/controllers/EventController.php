@@ -2,6 +2,7 @@
 
 namespace SimpleEvents\Controllers;
 
+use SimpleEvents\core\Utils;
 use SimpleEvents\Models\Event;
 use SimpleEvents\Core\View;
 
@@ -42,7 +43,7 @@ class EventController
             ];
 
             Event::create($data);
-            header('Location: /events');
+	        Utils::redirect('/events');
             exit;
         }
     }
