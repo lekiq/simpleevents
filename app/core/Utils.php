@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleEvents\core;
+namespace SimpleEvents\Core;
 
 class Utils {
 

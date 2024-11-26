@@ -2,7 +2,7 @@
 
 namespace SimpleEvents\Controllers;
 
-use SimpleEvents\core\Utils;
+use SimpleEvents\Core\Utils;
 use SimpleEvents\Models\Event;
 use SimpleEvents\Core\View;
 
