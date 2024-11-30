@@ -25,11 +25,12 @@ class Event
             v.name AS venue, 
             e.event_date, 
             e.description,
-            e._sport_id 
+            s.name AS sport 
         FROM events AS e
         JOIN teams AS t1 ON e._team1_id = t1.id
         JOIN teams AS t2 ON e._team2_id = t2.id
         JOIN venues AS v ON e._venue_id = v.id
+        JOIN sports AS s ON e._sport_id = s.id
         WHERE 1=1
     ";
 
@@ -65,7 +66,7 @@ class Event
      */
     public static function create(array $data): void
     {
-        self::validateRequiredFields( $data );
+        self::validateRequiredFields($data);
 
         // Ensure both teams exist
         $team1 = self::getTeam($data['_team1_id']);
@@ -77,12 +78,12 @@ class Event
         // Ensure teams belong to the same sport
         $sportId = self::getMatchSportId($team1['id'], $team2['id']);
 
-	    // Validate description length
-	    if (isset($data['description']) && strlen($data['description']) > 180) {
-		    throw new InvalidArgumentException("The description character limit is 180.");
-	    }
+        // Validate description length
+        if (isset($data['description']) && strlen($data['description']) > 180) {
+            throw new InvalidArgumentException("The description character limit is 180.");
+        }
 
-	    // Insert the event into the database
+        // Insert the event into the database
         $db = Database::connect();
         $stmt = $db->prepare("
             INSERT INTO events (_team1_id, _team2_id, _venue_id, _sport_id, event_date, description)
@@ -196,8 +197,8 @@ class Event
      */
     private static function validateRequiredFields(array $data): void
     {
-	    $requiredFields = [ '_team1_id', '_team2_id', '_venue_id', 'event_date' ];
-	    foreach ($requiredFields as $field) {
+        $requiredFields = [ '_team1_id', '_team2_id', '_venue_id', 'event_date' ];
+        foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 throw new InvalidArgumentException("The field '$field' is required.");
             }
