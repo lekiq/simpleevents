@@ -65,7 +65,7 @@ class Event
      */
     public static function create(array $data): void
     {
-        self::validateRequiredFields($data, ['_team1_id', '_team2_id', '_venue_id', 'event_date']);
+        self::validateRequiredFields( $data );
 
         // Ensure both teams exist
         $team1 = self::getTeam($data['_team1_id']);
@@ -183,14 +183,16 @@ class Event
 
     /**
      * Validate required fields
+     *
      * @param array $data
-     * @param array $requiredFields
+     *
      * @return void
      * @throws InvalidArgumentException
      */
-    private static function validateRequiredFields(array $data, array $requiredFields): void
+    private static function validateRequiredFields(array $data): void
     {
-        foreach ($requiredFields as $field) {
+	    $requiredFields = [ '_team1_id', '_team2_id', '_venue_id', 'event_date' ];
+	    foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 throw new InvalidArgumentException("The field '$field' is required.");
             }
