@@ -77,7 +77,12 @@ class Event
         // Ensure teams belong to the same sport
         $sportId = self::getMatchSportId($team1['id'], $team2['id']);
 
-        // Insert the event into the database
+	    // Validate description length
+	    if (isset($data['description']) && strlen($data['description']) > 180) {
+		    throw new InvalidArgumentException("The description character limit is 180.");
+	    }
+
+	    // Insert the event into the database
         $db = Database::connect();
         $stmt = $db->prepare("
             INSERT INTO events (_team1_id, _team2_id, _venue_id, _sport_id, event_date, description)
