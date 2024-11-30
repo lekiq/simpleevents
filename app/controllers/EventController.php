@@ -55,7 +55,7 @@ class EventController
             ];
 
             Event::create($data);
-            Utils::redirect('/events');
+            Utils::redirect('/');
         }
     }
 
