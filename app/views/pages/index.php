@@ -12,11 +12,8 @@
  *                    - teams (string): The competing teams (e.g., Team 1 vs Team 2).
  *                    - date (string): The date of the event (e.g., YYYY-MM-DD).
  *                    - venue (string): The event location.
- *                    - description (string): A brief description of the event.
+ *                    - description (string): A brief description of the event. Max characters 180.
  *
- * @todo Fetch options for the sports dropdown dynamically using vanilla JS or a library like jQuery or Alpine.js.
- * @todo Finish the logics of filters, check GET parameters and if set, set as already selected
- * @todo: Add a hidden div which will be used as a modal to for the new event form
  */
 ?>
 
@@ -24,10 +21,10 @@
 <section class="filters">
     <h2 class="filters__title">Filters</h2>
     <div class="filters__options">
-        <select id="sportsDropdown" class="filters__dropdown">
-            <option value="">All Sports</option>
+        <select id="sport_id_filter" name="_sport_id" class="filters__dropdown">
         </select>
         <input type="date" id="datePicker" class="filters__date-picker"/>
+		<button class="button" onclick="applyFilters()">Apply</button>
     </div>
 </section>
 <section class="events">
@@ -45,6 +42,41 @@
             <?php endforeach; ?>
         </div>
     <?php else : ?>
-        <p class="events__no-results">No events found.</p>
+        <p>No events found.</p>
     <?php endif; ?>
 </section>
+
+<div id="addEventModal" class="modal hidden">
+	<div class="modal__content">
+		<form id="addEventForm" action="/events" method="POST" class="modal__form mb-1">
+			<label for="sport_id">Sport</label>
+			<select id="sport_id" name="_sport_id" required>
+				<!-- Options dynamically populated -->
+			</select>
+
+			<label for="team1_id">Team 1:</label>
+			<select id="team1_id" name="_team1_id" required>
+				<!-- Options dynamically populated -->
+			</select>
+
+			<label for="team2_id">Team 2:</label>
+			<select id="team2_id" name="_team2_id" required>
+				<!-- Options dynamically populated -->
+			</select>
+
+			<label for="venue_id">Venue:</label>
+			<select id="venue_id" name="_venue_id" required>
+				<!-- Options dynamically populated -->
+			</select>
+
+			<label for="event_date">Event Date:</label>
+			<input type="datetime-local" id="event_date" name="event_date" required>
+
+			<label for="description">Description:</label>
+			<textarea id="description" name="description" rows="4"></textarea>
+
+			<button type="submit" class="button">Add Event</button>
+		</form>
+		<button class="button" onclick="closeModal()">Close</button>
+	</div>
+</div>

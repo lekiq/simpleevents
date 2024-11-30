@@ -18,7 +18,7 @@
 <header class="header">
     <div class="header__container">
         <div class="header__logo">SimpleEvents</div>
-        <button class="header__button">Add New</button>
+        <button class="button" onclick="openModal()">Add New</button>
     </div>
 </header>
 <main class="main">
