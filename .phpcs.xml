@@ -3,6 +3,5 @@
     <description>Coding standard: PSR-12</description>
     <rule ref="PSR12" />
     <file>app/</file>
-    <file>public/</file>
     <exclude-pattern>vendor/</exclude-pattern>
 </ruleset>
