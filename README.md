@@ -1,106 +1,131 @@
-# **SimpleEvents**
+
+# SimpleEvents
 
 A simple PHP application for managing and viewing sports events, built with an MVC structure.
 
----
+## Overview
 
-## **Getting Started**
+SimpleEvents is a sports event calendar application developed as a coding exercise. It allows users to:
+- View sports events with details like teams, venue, date, and description
+- Filter events by sport and date
+- Add new events through a modal form
+- View events in a responsive grid layout
 
-### **Minimum Requirements**
+### Features
 
-- **PHP Version**: 8.3 or higher
-- **Composer**: Ensure Composer is installed to manage dependencies.
+- **Event Listing**: Display events in a card-based layout
+- **Filtering System**: Filter events by sport and date
+- **Dynamic Form**: Add new events with automatic team loading based on selected sport
+- **Responsive Design**: Works on mobile, tablet, and desktop views
+- **SQL Injection Protection**: Uses prepared statements for database queries
+- **Input Validation**: Both frontend and backend validation for data integrity
 
----
+## Database Structure
 
-## **Application Structure**
+### ERD Diagram
+![Database ERD](erd.png)
 
-### **Routes**
+### Tables
+- **sports**: Stores different types of sports
+- **teams**: Stores teams with their associated sport
+- **venues**: Stores event venues
+- **events**: Main table linking teams, venues, and containing event details
 
-- All application routes are defined in the `routes.php` file located in the project root.
+## Getting Started
 
-### **Environment Variables**
+### Minimum Requirements
 
-- Rename the `.env.test` file to `.env`.
-- Configure environment variables in the `.env` file.
-- The `Config` class handles environment variables:
-    - Load variables using:
-      ```php
-      Config::load();
-      ```
-    - Access variables using:
-      ```php
-      Config::get('ENV_VARIABLE');
-      ```
-- Example `.env` file:
-  ```env
-  DB_PATH=/path/to/your/database.sqlite
-  ```
+To run this application, ensure the following requirements are met:
 
----
+1. **PHP**: Version 8.3 or higher must be installed on your system.
+    - Check your PHP version by running: `php -v`
+    - [Download PHP](https://www.php.net/downloads)
+2. **Composer**: Install Composer to manage dependencies.
+    - [Download Composer](https://getcomposer.org/download/)
+3. **SQLite**: Ensure the SQLite extension for PHP is enabled.
+    - Confirm by running: `php -m | grep sqlite3`
+4. **Development Environment**:
+    - Any IDE supporting PHP, such as **PHPStorm** or **VSCode**, is recommended.
 
-## **Scripts**
+### Installation
 
-### **Code Fixer**
-
-Automatically fix code style issues:
-
-```bash
-vendor/bin/phpcbf
-```
-
-### **Code Sniffer**
-
-Check for code style violations:
+1. Clone the repository:
 
 ```bash
-vendor/bin/phpcs
+git clone https://github.com/lekiq/simpleevents.git
+cd simpleevents
 ```
 
----
+2. Install dependencies:
 
-## **Running the Application**
+```bash
+composer install
+```
 
-To start the application locally:
+3. Configure environment:
+- Rename `.env.test` to `.env`
+- Update the `DB_PATH` in `.env` to point to your SQLite database
+
+4. Start the application:
 
 ```bash
 php -S localhost:8000 -t public
 ```
 
----
+## Application Structure
 
-## **Documentation: Query Method**
+### Core Components
 
-### **Purpose**
+- **MVC Architecture**: Follows Model-View-Controller pattern
+- **Router**: Custom routing system for handling requests
+- **Database**: PDO-based database connection management
+- **Config**: Environment variable management using phpdotenv
 
-The `Event::query()` method dynamically fetches event data from the database with optional filters.
+### Key Files
 
-### **Usage**
+- `routes.php`: Defines all application routes
+- `app/controllers/EventController.php`: Handles event-related actions
+- `app/models/Event.php`: Event model with database operations
+- `app/views/pages/index.php`: Main view template
 
-```php
-$args = [
-    '_sport_id' => 1,       // Optional: Filter by sport ID
-    'date' => '2024-12-01'  // Optional: Filter by event date
-];
+## Development
 
-$events = Event::query($args);
+### Code Style
+
+The project follows PSR-12 coding standards. Use the following commands:
+
+```bash
+# Check code style
+vendor/bin/phpcs
+
+# Fix code style
+vendor/bin/phpcbf
 ```
 
-### **Supported Filters**
+### API Endpoints
 
-- `_sport_id`: Matches events belonging to the specified sport ID.
-- `date`: Matches events occurring on the specified date.
+- `GET /api/sports`: Retrieve all sports
+- `GET /api/teams`: Get teams for a specific sport
+- `GET /api/venues`: Get all venues
+- `POST /events`: Create a new event
 
-### **SQL Injection Protection**
+## Technical Decisions
 
-The method uses prepared statements and bound parameters to ensure security.
+1. **SQLite**: Chosen for simplicity and portability
+2. **No Frontend Framework**: Pure JavaScript for lighter footprint
+3. **CSS Nesting**: Modern CSS approach for maintainable styles
+4. **Modal Form**: Enhanced UX for event creation
+5. **Prepared Statements**: Security against SQL injection
 
----
+## Future Improvements
 
-## **Notes**
+- Add authentication system
+- Implement event editing and deletion
+- Add pagination for event listing
+- Include image upload for teams/venues
+- Add unit tests
+- Implement caching system
 
-- Before starting the application, update the `.env` file with the necessary configurations, such as `DB_PATH`.
-- Ensure all dependencies are installed by running:
-  ```bash
-  composer install
-  ```
+## License
+
+MIT License
