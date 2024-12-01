@@ -22,9 +22,6 @@ SimpleEvents is a sports event calendar application developed as a coding exerci
 
 ## Database Structure
 
-### ERD Diagram
-![Database ERD](erd.png)
-
 ### Tables
 - **sports**: Stores different types of sports
 - **teams**: Stores teams with their associated sport
@@ -46,6 +43,8 @@ To run this application, ensure the following requirements are met:
     - Confirm by running: `php -m | grep sqlite3`
 4. **Development Environment**:
     - Any IDE supporting PHP, such as **PHPStorm** or **VSCode**, is recommended.
+5. **Web Server**:
+    - **Apache**: Required for `.htaccess` configuration. Ensure `mod_rewrite` is enabled.
 
 ### Installation
 
@@ -72,6 +71,54 @@ composer install
 php -S localhost:8000 -t public
 ```
 
+## Deployment on Shared Hosting
+
+To deploy SimpleEvents on shared hosting like Hostinger:
+
+1. **Upload Files**:
+    - Upload all project files, including the `.htaccess` file, via FTP or File Manager to the root directory (e.g., `/public_html`).
+
+2. **Verify `.htaccess`**:
+    - The application uses an `.htaccess` file for routing and securing files.
+    - Apache must have the `mod_rewrite` module enabled for this to work.
+    - If you encounter issues, contact your hosting provider to confirm `mod_rewrite` is active.
+
+3. **Set File Permissions**:
+    - Ensure directories have proper permissions (`755` for directories, `644` for files).
+
+4. **Update `.env` File**:
+    - Update the `.env` file to reflect your server’s database path, e.g.:
+
+   ```dotenv
+   DB_PATH=/home/yourusername/public_html/database/database.sqlite
+   ```
+
+5. **Test the Application**:
+    - Access your application at `https://yourdomain.com`.
+
+### Example Hosted Application
+You can test the application here: [https://pink-cattle-435369.hostingersite.com/](https://pink-cattle-435369.hostingersite.com/)
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue: 404 Error for Routes**
+- **Cause**: `.htaccess` is not properly applied, or `mod_rewrite` is disabled.
+- **Solution**: Ensure the `.htaccess` file is uploaded correctly, and `mod_rewrite` is enabled.
+
+**Issue: SQLite Database Not Found**
+- **Cause**: Incorrect `DB_PATH` in `.env`.
+- **Solution**: Verify the `database.sqlite` file location and path in `.env`.
+
+**Issue: Blank Screen**
+- **Cause**: Missing PHP extensions or misconfigured error reporting.
+- **Solution**: Ensure PHP extensions are enabled and set `APP_DEBUG=true` in `.env` to display errors.
+
+**Issue: .htaccess Rules Not Applied**
+- **Cause**: Apache is not configured to use `.htaccess` files, or `AllowOverride` is disabled.
+- **Solution**: Ensure Apache's configuration permits `.htaccess` overrides by setting `AllowOverride All` in the server config.
+
 ## Application Structure
 
 ### Core Components
@@ -93,12 +140,12 @@ php -S localhost:8000 -t public
 ### Code Style
 
 The project follows PSR-12 coding standards. Use the following commands:
-
+#### Check code style
 ```bash
-# Check code style
 vendor/bin/phpcs
-
-# Fix code style
+```
+#### Fix code style
+```bash
 vendor/bin/phpcbf
 ```
 
@@ -116,15 +163,11 @@ vendor/bin/phpcbf
 3. **CSS Nesting**: Modern CSS approach for maintainable styles
 4. **Modal Form**: Enhanced UX for event creation
 5. **Prepared Statements**: Security against SQL injection
+6. **Apache Dependency**: `.htaccess` is used for routing and securing files, leveraging Apache's `mod_rewrite` capabilities.
 
-## Future Improvements
+## Contributing
 
-- Add authentication system
-- Implement event editing and deletion
-- Add pagination for event listing
-- Include image upload for teams/venues
-- Add unit tests
-- Implement caching system
+If you encounter any issues or have improvements to suggest, feel free to open an issue or submit a pull request on [GitHub](https://github.com/lekiq/simpleevents).
 
 ## License
 
