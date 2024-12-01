@@ -84,9 +84,9 @@ php -S localhost:8000 -t public
 ### Key Files
 
 - `routes.php`: Defines all application routes
-- `app/controllers/EventController.php`: Handles event-related actions
-- `app/models/Event.php`: Event model with database operations
-- `app/views/pages/index.php`: Main view template
+- `app/Controllers/EventController.php`: Handles event-related actions
+- `app/Models/Event.php`: Event model with database operations
+- `app/Views/pages/index.php`: Main view template
 
 ## Development
 
