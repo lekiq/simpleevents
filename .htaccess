@@ -1,0 +1,29 @@
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to sensitive files and directories
+<FilesMatch "^(\.env|composer\.(json|lock)|\.gitignore|\.htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# Deny access to dot files
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Enable mod_rewrite
+RewriteEngine On
+
+# Redirect all requests to the public directory dynamically
+RewriteCond %{REQUEST_URI} !^/public/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Ensure all requests are routed through public/index.php for non-existing files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ public/index.php [L,QSA]
+
+# Serve the public index for the root request
+DirectoryIndex public/index.php
