@@ -22,6 +22,9 @@ SimpleEvents is a sports event calendar application developed as a coding exerci
 
 ## Database Structure
 
+### ERD Diagram
+![Database ERD](erd.png)
+
 ### Tables
 - **sports**: Stores different types of sports
 - **teams**: Stores teams with their associated sport
