@@ -95,8 +95,13 @@ To deploy SimpleEvents on shared hosting like Hostinger:
    ```dotenv
    DB_PATH=/home/yourusername/public_html/database/database.sqlite
    ```
+   
+5. **If Composer Cannot Be Run on Server**:
+    - Run `composer install` locally on your machine.
+    - Upload the entire `vendor` folder to the server after running the command locally.
 
-5. **Test the Application**:
+
+6. **Test the Application**:
     - Access your application at `https://yourdomain.com`.
 
 ### Example Hosted Application
@@ -154,7 +159,7 @@ vendor/bin/phpcbf
 
 ### API Endpoints
 
-- `GET /api/sports`: Retrieve all sports with get parameters 
+- `GET /api/sports`: Retrieve all sports with get parameters
 - `GET /api/teams`: Get teams for a specific sport with get parameter `_sport_id`
 - `GET /api/venues`: Get all venues
 - `POST /events`: Create a new event
