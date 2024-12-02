@@ -100,18 +100,16 @@ class EventController
         // Attempt to create the event
         try {
             Event::create($data);
-            http_response_code(201); // Created
-            echo json_encode([
+            Utils::jsonResponse([
                 'status' => 'success',
                 'message' => 'Event created successfully.',
-            ]);
+            ], 201);
         } catch (\Exception $e) {
-            http_response_code(500); // Internal Server Error
-            echo json_encode([
+            Utils::jsonResponse([
                 'status' => 'error',
                 'message' => 'An unexpected error occurred.',
                 'error' => $e->getMessage(), // Log or include only if safe
-            ]);
+            ], 500);
         }
     }
 

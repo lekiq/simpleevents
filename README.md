@@ -136,7 +136,7 @@ You can test the application here: [https://pink-cattle-435369.hostingersite.com
 - `routes.php`: Defines all application routes
 - `app/Controllers/EventController.php`: Handles event-related actions
 - `app/Models/Event.php`: Event model with database operations
-- `app/Views/pages/index.php`: Main view template
+- `app/views/pages/index.php`: Main view template
 
 ## Development
 
@@ -154,8 +154,8 @@ vendor/bin/phpcbf
 
 ### API Endpoints
 
-- `GET /api/sports`: Retrieve all sports
-- `GET /api/teams`: Get teams for a specific sport
+- `GET /api/sports`: Retrieve all sports with get parameters 
+- `GET /api/teams`: Get teams for a specific sport with get parameter `_sport_id`
 - `GET /api/venues`: Get all venues
 - `POST /events`: Create a new event
 
