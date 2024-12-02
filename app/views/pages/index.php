@@ -37,7 +37,9 @@
                     <p class="event-card__p"><?php echo $event['team1'] ?> vs <?php echo $event['team2'] ?></p>
                     <p class="event-card__p"><?php echo date('H:i - d.m.Y', strtotime($event['event_date'])) ?></p>
                     <p class="event-card__p"><?php echo $event['venue'] ?></p>
-                    <p class="event-card__p"><?php echo $event['description'] ?></p>
+                    <?php if ($event['description']) : ?>
+                        <p class="event-card__p"><?php echo $event['description'] ?></p>
+                    <?php endif; ?>
                 </article>
             <?php endforeach; ?>
         </div>
